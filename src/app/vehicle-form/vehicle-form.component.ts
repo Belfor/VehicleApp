@@ -28,25 +28,27 @@ export class VehicleFormComponent implements OnInit {
   }
 
   process(){
-    console.log("Formulario enviado");
-    console.log(this.vehicleRequest);
     this.vehicleService.processVehicle(this.vehicleRequest).subscribe( (data : any) =>{
-      console.log(data);
       this.vehicleResponse.VehicleId = data.vehicleId;
       this.vehicleResponse.ReturnCode = VehicleValidationResultCode[VehicleValidationResultCode[data.returnCode]];
-      console.log(VehicleValidationResultCode[1])
-      console.log(data.returnCode)
       this.response = true;
 
       if (this.vehicleResponse.ReturnCode == VehicleValidationResultCode.Valid ){
-        console.log("Valid")
+     
         this.valid = true;
-        this.vehicleResponse.TextCode = "Valid"
+        this.vehicleResponse.TextCode = "Valid";
       }else{
-        console.log("Invalid")
+       
         this.valid = false;
-        this.vehicleResponse.TextCode = "Invalid"
+        this.vehicleResponse.TextCode = "Invalid";
       }
+    },
+    error => {
+      console.log("Error Server");
+      this.valid = false;
+      this.vehicleResponse.VehicleId = 0;
+      this.vehicleResponse.ReturnCode = VehicleValidationResultCode.NotSpecified;
+      this.vehicleResponse.TextCode = "The server does not respond";
     });
     this.vehicleRequest = new VehicleRequest()
   }
